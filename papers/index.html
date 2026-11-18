@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glioblastoma Research Finder | Gliolab</title>
+  <meta name="description" content="Search glioblastoma research papers from PubMed.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- ===== Header (edit links / logo here) ===== -->
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="https://gliolab.org" aria-label="Gliolab home">
+        <!-- To use the real logo, swap this block for: <img src="images/gliolab-logo.png" alt="Gliolab" height="70"> -->
+        <span class="brand-name">Gliolab</span>
+        <span class="brand-sub">GLIOBLASTOMA FOUNDATION</span>
+      </a>
+      <nav class="main-nav">
+        <a href="#search">Find research</a>
+        <a href="../trials/index.html">Clinical trials</a>
+        <a href="#about">About</a>
+        <a class="btn btn-indigo" href="https://gliolab.org">Gliolab home</a>
+      </nav>
+    </div>
+  </header>
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <div class="hero-art" aria-hidden="true">
+      <span class="dot dot-lilac"></span>
+      <span class="dot dot-mauve"></span>
+      <span class="dot dot-indigo"></span>
+      <span class="dot dot-plum"></span>
+    </div>
+    <div class="hero-box">
+      <h1>Glioblastoma<br>Research Finder</h1>
+      <p>Search glioblastoma research from PubMed, filtered by topic, article type, and date. Always up to date.</p>
+      <div class="hero-stats" id="heroStats"></div>
+      <a class="btn btn-white" href="#search">Find research</a>
+    </div>
+  </section>
+
+  <!-- ===== Search + results ===== -->
+  <main id="search" class="search-section">
+    <h2 class="section-title">Search Research</h2>
+
+    <form class="search-bar" id="searchForm">
+      <input id="q" type="search" placeholder="Search by keyword, drug, gene, or author…" autocomplete="off">
+      <select id="sort" aria-label="Sort results">
+        <option value="pub_date">Most recent</option>
+        <option value="relevance">Best match</option>
+      </select>
+      <button class="btn btn-plum" type="submit">Search</button>
+    </form>
+
+    <div class="quick-chips">
+      <button class="chip" data-quick="free">Free full text</button>
+      <button class="chip" data-quick="reviews">Reviews only</button>
+      <button class="chip" data-quick="trials">Clinical trials</button>
+      <button class="chip" data-quick="year">Past year</button>
+      <button class="chip chip-clear" id="clearAll">Clear all filters</button>
+    </div>
+
+    <div class="layout">
+      <button class="filters-toggle" id="filtersToggle">Show filters</button>
+
+      <aside class="filters" id="filters">
+        <!-- filled in by app.js -->
+      </aside>
+
+      <section class="results">
+        <div class="results-head">
+          <p id="resultCount"></p>
+          <a class="data-date" id="pubmedLink" target="_blank" rel="noopener"></a>
+        </div>
+        <div id="resultList"></div>
+        <nav class="pager" id="pager" hidden>
+          <button class="btn btn-plum" id="prevPage">‹ Previous</button>
+          <span id="pageInfo"></span>
+          <button class="btn btn-plum" id="nextPage">Next ›</button>
+        </nav>
+      </section>
+    </div>
+  </main>
+
+  <!-- ===== About / disclaimer ===== -->
+  <section id="about" class="about">
+    <h2 class="section-title">About This Tool</h2>
+    <div class="about-grid">
+      <div>
+        <h3>Where the papers come from</h3>
+        <p>Results come live from <a href="https://pubmed.ncbi.nlm.nih.gov" target="_blank" rel="noopener">PubMed</a>, the U.S. National Library of Medicine's database of biomedical research. Every search is limited to glioblastoma papers, so new research shows up as soon as PubMed lists it.</p>
+      </div>
+      <div>
+        <h3>How to use it</h3>
+        <p>Type a keyword, or just use the filters. Topics like immunotherapy, MGMT, or focused ultrasound narrow results to a research area. "Free full text" shows papers anyone can read without a subscription.</p>
+      </div>
+      <div>
+        <h3>Important</h3>
+        <p>Research papers describe studies and are not medical advice. Findings from a single study may not apply to every patient. Please talk with your care team about what research means for you.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> Glioblastoma Foundation · Gliolab</p>
+    <p>Data from PubMed, U.S. National Library of Medicine. Not medical advice.</p>
+  </footer>
+
+  <!-- ===== Paper detail popup ===== -->
+  <div class="modal" id="modal" hidden>
+    <div class="modal-backdrop" data-close></div>
+    <div class="modal-panel" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <button class="modal-close" data-close aria-label="Close">×</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

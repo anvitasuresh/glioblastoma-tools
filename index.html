@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Glioblastoma Research Tools | Gliolab</title>
+  <meta name="description" content="Search glioblastoma clinical trials and research papers, updated daily.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Oswald:wght@500;600&display=swap" rel="stylesheet">
+  <!-- shares the trials finder's stylesheet so all three pages look the same -->
+  <link rel="stylesheet" href="trials/styles.css">
+  <style>
+    .tools { max-width: var(--max); margin: 0 auto; padding: 60px 24px 80px; }
+    .tool-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+    .tool {
+      display: flex; flex-direction: column;
+      border: 1px solid var(--line); border-top: 8px solid var(--plum);
+      padding: 34px 34px 30px; text-decoration: none; color: var(--text);
+      transition: box-shadow .15s, transform .15s;
+    }
+    .tool:hover { box-shadow: 0 8px 26px rgba(81,31,98,.14); transform: translateY(-2px); }
+    .tool.alt { border-top-color: var(--indigo); }
+    .tool h3 {
+      font-family: var(--font-head); font-weight: 600; text-transform: uppercase;
+      color: var(--heading); font-size: 32px; margin: 0 0 12px; line-height: 1.1;
+    }
+    .tool p { margin: 0 0 16px; font-size: 16px; }
+    .tool ul { margin: 0 0 22px; padding-left: 20px; font-size: 15px; }
+    .tool li { margin: 4px 0; }
+    .tool .stat { font-size: 14px; color: var(--muted); margin: 0 0 20px; min-height: 21px; }
+    .tool .btn { align-self: flex-start; margin-top: auto; }
+    @media (max-width: 800px) { .tool-grid { grid-template-columns: 1fr; } }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="header-inner">
+      <a class="brand" href="https://gliolab.org" aria-label="Gliolab home">
+        <span class="brand-name">Gliolab</span>
+        <span class="brand-sub">GLIOBLASTOMA FOUNDATION</span>
+      </a>
+      <nav class="main-nav">
+        <a href="trials/index.html">Clinical trials</a>
+        <a href="papers/index.html">Research papers</a>
+        <a class="btn btn-indigo" href="https://gliolab.org">Gliolab home</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="hero-art" aria-hidden="true">
+      <span class="dot dot-lilac"></span>
+      <span class="dot dot-mauve"></span>
+      <span class="dot dot-indigo"></span>
+      <span class="dot dot-plum"></span>
+    </div>
+    <div class="hero-box">
+      <h1>Glioblastoma<br>Research Tools</h1>
+      <p>Free tools from the Glioblastoma Foundation to help patients, families, and researchers find clinical trials and the latest research.</p>
+      <a class="btn btn-white" href="#tools">Get started</a>
+    </div>
+  </section>
+
+  <main id="tools" class="tools">
+    <h2 class="section-title">Choose a Tool</h2>
+    <div class="tool-grid">
+      <a class="tool" href="trials/index.html">
+        <h3>Clinical Trials Finder</h3>
+        <p>Every glioblastoma clinical trial from ClinicalTrials.gov in one place.</p>
+        <ul>
+          <li>Filter by recruiting status, phase, and treatment type</li>
+          <li>Newly diagnosed vs. recurrent</li>
+          <li>Search by hospital, city, state, or country</li>
+        </ul>
+        <p class="stat" id="trialStat">Updated daily</p>
+        <span class="btn btn-plum">Find a trial</span>
+      </a>
+      <a class="tool alt" href="papers/index.html">
+        <h3>Research Finder</h3>
+        <p>Glioblastoma research papers from PubMed, searched live.</p>
+        <ul>
+          <li>15 GBM topics, from immunotherapy to MGMT</li>
+          <li>Reviews, clinical trials, and meta-analyses</li>
+          <li>Abstracts, free full text, and citations</li>
+        </ul>
+        <p class="stat">Always current. New papers appear as soon as PubMed lists them.</p>
+        <span class="btn btn-indigo">Find research</span>
+      </a>
+    </div>
+  </main>
+
+  <section class="about">
+    <div class="about-grid">
+      <div>
+        <h3>Where the data comes from</h3>
+        <p>Trials come from ClinicalTrials.gov and are refreshed every day. Papers come live from PubMed. Both are run by the U.S. National Library of Medicine.</p>
+      </div>
+      <div>
+        <h3>Who it's for</h3>
+        <p>Patients, families, caregivers, physicians, and researchers: anyone looking for glioblastoma trials or research.</p>
+      </div>
+      <div>
+        <h3>Important</h3>
+        <p>These tools are for information only and are not medical advice. Please talk with your care team before making any treatment decisions.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> Glioblastoma Foundation · Gliolab</p>
+    <p>Data from ClinicalTrials.gov and PubMed. Not medical advice.</p>
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent = new Date().getFullYear();
+    // show today's open-trial count if the daily summary is available (it is on the live site)
+    fetch("trials/data/summary.json")
+      .then((r) => (r.ok ? r.json() : null))
+      .then((s) => {
+        if (!s) return;
+        document.getElementById("trialStat").textContent =
+          `${s.open_trials.toLocaleString()} trials open to patients · updated ${s.updated}`;
+      })
+      .catch(() => {});
+  </script>
+</body>
+</html>

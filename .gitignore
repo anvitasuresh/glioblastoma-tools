@@ -1,0 +1,9 @@
+# Big generated data files - rebuilt every day by the GitHub job, so not stored in git
+trials/data/trials.js
+trials/data/trials.json
+
+# Mac / Python clutter
+.DS_Store
+__pycache__/
+*.pyc
+.Rhistory

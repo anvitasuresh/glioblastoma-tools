@@ -1,0 +1,79 @@
+# Pulls fresh glioblastoma trials from ClinicalTrials.gov every day
+# and publishes the whole site (landing page + trials + papers) to GitHub Pages.
+#
+# Runs:
+#   - every day at 10:23 UTC (5:23 AM Eastern in winter, 6:23 AM in summer)
+#   - whenever code is pushed to main
+#   - on demand: Actions tab -> "Update data and deploy" -> "Run workflow"
+#
+# If ClinicalTrials.gov is down, the run fails, the site keeps yesterday's
+# data, and GitHub emails the repo owner.
+
+name: Update data and deploy
+
+on:
+  schedule:
+    - cron: "23 10 * * *"
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write   # to commit the daily summary.json
+  pages: write      # to publish to GitHub Pages
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Download latest trials from ClinicalTrials.gov
+        run: python scripts/fetch_trials.py
+
+      # Keeps a small daily record of the counts in git. This also counts as
+      # repo activity, which stops GitHub from pausing the daily schedule
+      # (it pauses scheduled jobs on repos with no activity for 60 days).
+      - name: Save daily summary
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add trials/data/summary.json
+          if git diff --cached --quiet; then
+            echo "No change to summary"
+          else
+            git commit -m "Daily trial data update $(date -u +%Y-%m-%d)"
+            git push
+          fi
+
+      - name: Assemble site
+        run: |
+          mkdir _site
+          cp -r index.html trials papers _site/
+          ls -la _site _site/trials/data
+
+      - uses: actions/configure-pages@v5
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
